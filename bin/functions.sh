@@ -135,6 +135,6 @@ mailMessage () {
     # $1 = host
     # $2 = backup log
     # $3 = rsync log 
-    /bin/cat $2 | /usr/bin/mailx root@virtual-dev.de -s "[proliant] Backup for $1" -A $3
+    /bin/cat $2 | /usr/bin/mailx root -s "[`hostname`] Backup for $1" -A $3
 
 }

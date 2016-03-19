@@ -75,7 +75,7 @@ storageCreate() {
             btrfs subvolume create /${2}
             ;;
         zfs)
-            zfs create ${2}
+            /sbin/zfs create ${2}
             ;;
         *)
             echo "Warning: POOL_TYPE unknown."
@@ -97,7 +97,7 @@ storageSnapshot() {
             btrfs subvolume snapshot -r /${2} /${2}/.btrfs/snapshot/${3}
             ;;
         zfs)
-            zfs snapshot ${2}${3}
+            /sbin/zfs snapshot ${2}${3}
             ;;
         *)
             echo "Warning: POOL_TYPE unknown."
@@ -119,7 +119,7 @@ storageDelete() {
             btrfs subvolume delete /${2}/.btrfs/snapshot/${3}
             ;;
         zfs)
-            zfs destroy ${2}@${3}
+            /sbin/zfs destroy ${2}@${3}
             ;;
         *)
             echo "Warning: POOL_TYPE unknown."

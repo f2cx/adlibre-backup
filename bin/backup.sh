@@ -94,6 +94,13 @@ if [ -n "$DRYRUN" ] ; then
     exit
 fi
 
+# Run pre-backup command
+
+if [ -n "$PRE_BACKUP_CMD" ] ; then
+    echo "Running pre-backup command..."
+    eval $PRE_BACKUP_CMD
+fi
+
 # Do backup
 (
 rm -f ${LOGFILE} # delete logfile from host dir before we begin.
@@ -155,5 +162,13 @@ else
 fi
 
 ) 2>&1 1>> ${LOGFILE} | tee -a ${LOGFILE} # stderr to console, stdout&stderr to logfile
+
+# Run post-backup command
+
+if [ -n "$POST_BACKUP_CMD" ] ; then
+    echo "Running post-backup command..."
+    eval $POST_BACKUP_CMD
+fi
+
 
 exit 0

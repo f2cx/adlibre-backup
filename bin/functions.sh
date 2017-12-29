@@ -138,3 +138,20 @@ mailMessage () {
     /bin/cat $2 | /usr/bin/mailx root -s "[`hostname`] Backup for $1" -A $3
 
 }
+# 
+# Send E-Mail, however state in subject that the backup failed,
+# or if the rsync log contains "No route to host" append
+# OFFLINE information in the subject.
+#
+mailErrorMessage () {
+    # $1 = host
+    # $2 = backup log
+    # $3 = rsync log
+
+    OFFLINE=`grep "No route to host" $3 |wc -l`
+
+    if [[ "$OFFLINE" != "1" ]]; then
+      /bin/cat $2 | /usr/bin/mailx root -s "[`hostname`] Backup for $1 (FAILED)" -A $3
+    fi
+
+}

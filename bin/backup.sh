@@ -102,7 +102,7 @@ echo $ANNOTATION > ${HOSTS_DIR}${HOST}/c/ANNOTATION
 
 STARTTIME=$(date +%s)
 
-RSYNC_CMD="${RSYNC_BIN} ${RSYNC_ARGS} ${RSYNC_ADDITIONAL_ARGS} ${RSYNC_EXCLUDES} ${SSH_USER}@${RSYNC_HOST-${HOST}}${RSYNC_BACKUP_PATHS} ${HOSTS_DIR}${HOST}/d/"
+RSYNC_CMD="${RSYNC_BIN} ${RSYNC_ARGS} ${RSYNC_ADDITIONAL_ARGS} ${RSYNC_EXCLUDES} ${RSYNC_HOST-${HOST}}${RSYNC_BACKUP_PATHS} ${HOSTS_DIR}${HOST}/d/"
 logMessage 1 $LOGFILE "Running: $RSYNC_CMD"
 CMD=$(eval $RSYNC_CMD &> $RSYNC_LOGFILE;)
 RSYNC_RETVAL=$?
@@ -132,7 +132,7 @@ if [ "$RSYNC_RETVAL" = "0" ] || [ "${SNAPSHOT_ON_ERROR}" == "true" ]; then
             raiseAlert "backup ${HOST}" 2 "Backup succeeded, but Snapshot Failed"
         fi
         logMessage 3 $LOGFILE "Backup succeeded, but snapshot ${SNAP_NAME} Failed"
-	mailMessage ${HOST} $LOGFILE $RSYNC_LOGFILE
+	mailErrorMessage ${HOST} $LOGFILE $RSYNC_LOGFILE
         exit 99
     elif [ "$RSYNC_RETVAL" != "0" ] && [ "$SNAPSHOT_RETVAL" = "0" ] && [ "${SNAPSHOT_ON_ERROR}" == "true" ]; then
         if [ "$NSCA_ENABLED" == "true" ]; then
@@ -141,7 +141,7 @@ if [ "$RSYNC_RETVAL" = "0" ] || [ "${SNAPSHOT_ON_ERROR}" == "true" ]; then
             raiseAlert "${ANNOTATION}" 1 "Backup Failed: ${CMD}. Snapshotted anyway." ${HOST}
         fi
         logMessage 3 $LOGFILE "Backup Error: ${CMD}. Rsync exited with ${RSYNC_RETVAL}. Snapshotted anyway."
-	mailMessage ${HOST} $LOGFILE $RSYNC_LOGFILE
+	mailErrorMessage ${HOST} $LOGFILE $RSYNC_LOGFILE
         exit 99
     fi
 else
@@ -150,7 +150,7 @@ else
         raiseAlert "${ANNOTATION}" 2 "Backup Failed: ${CMD}." ${HOST}
     fi
     logMessage 3 $LOGFILE "Backup Failed: ${CMD}. Rsync exited with ${RSYNC_RETVAL}."
-    mailMessage ${HOST} $LOGFILE $RSYNC_LOGFILE
+    mailErrorMessage ${HOST} $LOGFILE $RSYNC_LOGFILE
     exit 99
 fi
 
